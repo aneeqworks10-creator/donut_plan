@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Training Program</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --dark: #111111;
+    --card: #161616;
+    --border: #252525;
+    --accent: #E8FF00;
+    --accent2: #FF4D00;
+    --white: #F5F5F0;
+    --muted: #888888;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  .section {
+    padding: 60px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    max-width: 80px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1;
+    margin-bottom: 48px;
+  }
+
+  .workout-cards {
+    display: grid;
+    gap: 2px;
+  }
+
+  .workout-day {
+    background: var(--card);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .workout-day:hover { border-color: var(--accent); }
+
+  .workout-header {
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .workout-day-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 48px;
+  }
+
+  .workout-info { flex: 1; }
+
+  .workout-day-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .workout-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .workout-toggle {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--accent);
+    transition: transform 0.3s;
+    min-width: 24px;
+  }
+
+  .workout-toggle.open { transform: rotate(45deg); }
+
+  .workout-body {
+    display: none;
+    padding: 0 32px 32px;
+  }
+
+  .workout-body.open { display: block; }
+
+  .exercise-list {
+    list-style: none;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+
+  .exercise-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    gap: 16px;
+  }
+
+  .exercise-item:last-child { border-bottom: none; }
+
+  .exercise-name { font-size: 15px; font-weight: 500; }
+
+  .exercise-sets {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  .exercise-rest {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 16px;
+    padding: 10px 16px;
+    background: var(--dark);
+    border-left: 2px solid var(--accent2);
+    display: inline-block;
+    letter-spacing: 1px;
+  }
+
+  .hiit-block {
+    background: rgba(255,77,0,0.07);
+    border: 1px solid rgba(255,77,0,0.2);
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .hiit-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--accent2);
+    margin-bottom: 16px;
+  }
+
+  .hiit-interval { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .interval-item {
+    background: var(--dark);
+    padding: 16px 24px;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .interval-time {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--accent2);
+    line-height: 1;
+  }
+
+  .interval-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 600px) {
+    .workout-header { padding: 20px; }
+    .workout-body { padding: 0 20px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<section class="section fade-in">
+  <div class="section-label">Training Program</div>
+  <h2 class="section-title">5 Day Gym Plan</h2>
+
+  <div class="workout-cards">
+
+    <!-- DAY 1 -->
+    <div class="workout-day">
+      <div class="workout-header" onclick="toggle(this)">
+        <div class="workout-day-num">01</div>
+        <div class="workout-info">
+          <div class="workout-day-label">Monday</div>
+          <div class="workout-name">Upper Body Strength</div>
+        </div>
+        <div class="workout-toggle">+</div>
+      </div>
+      <div class="workout-body">
+        <ul class="exercise-list">
+          <li class="exercise-item"><span class="exercise-name">Bench Press</span><span class="exercise-sets">4 x 10</span></li>
+          <li class="exercise-item"><span class="exercise-name">Barbell Row</span><span class="exercise-sets">4 x 10</span></li>
+          <li class="exercise-item"><span class="exercise-name">Overhead Press</span><span class="exercise-sets">3 x 12</span></li>
+          <li class="exercise-item"><span class="exercise-name">Lat Pulldown</span><span class="exercise-sets">3 x 12</span></li>
+          <li class="exercise-item"><span class="exercise-name">Dumbbell Curl</span><span class="exercise-sets">3 x 15</span></li>
+          <li class="exercise-item"><span class="exercise-name">Tricep Pushdown</span><span class="exercise-sets">3 x 15</span></li>
+        </ul>
+        <div class="exercise-rest">60 seconds rest between sets</div>
+      </div>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="workout-day">
+      <div class="workout-header" onclick="toggle(this)">
+        <div class="workout-day-num">02</div>
+        <div class="workout-info">
+          <div class="workout-day-label">Tuesday</div>
+          <div class="workout-name">Lower Body Strength</div>
+        </div>
+        <div class="workout-toggle">+</div>
+      </div>
+      <div class="workout-body">
+        <ul class="exercise-list">
+          <li class="exercise-item"><span class="exercise-name">Barbell Squat</span><span class="exercise-sets">4 x 10</span></li>
+          <li class="exercise-item"><span class="exercise-name">Romanian Deadlift</span><span class="exercise-sets">4 x 10</span></li>
+          <li class="exercise-item"><span class="exercise-name">Leg Press</span><span class="exercise-sets">3 x 12</span></li>
+          <li class="exercise-item"><span class="exercise-name">Walking Lunges</span><span class="exercise-sets">3 x 12 each leg</span></li>
+          <li class="exercise-item"><span class="exercise-name">Leg Curl</span><span class="exercise-sets">3 x 15</span></li>
+          <li class="exercise-item"><span class="exercise-name">Calf Raises</span><span class="exercise-sets">4 x 20</span></li>
+        </ul>
+        <div class="exercise-rest">60 to 90 seconds rest between sets</div>
+      </div>
+    </div>
+
+    <!-- DAY 3 -->
+    <div class="workout-day">
+      <div class="workout-header" onclick="toggle(this)">
+        <div class="workout-day-num">03</div>
+        <div class="workout-info">
+          <div class="workout-day-label">Wednesday</div>
+          <div class="workout-name">HIIT Cardio and Core</div>
+        </div>
+        <div class="workout-toggle">+</div>
+      </div>
+      <div class="workout-body">
+        <div class="hiit-block">
+          <div class="hiit-title">HIIT Protocol</div>
+          <div class="hiit-interval">
+            <div class="interval-item">
+              <div class="interval-time">5</div>
+              <div class="interval-label">Min Warmup</div>
+            </div>
+            <div class="interval-item">
+              <div class="interval-time">30s</div>
+              <div class="interval-label">All Out Effort</div>
+            </div>
+            <div class="interval-item">
+              <div class="interval-time">90s</div>
+              <div class="interval-label">Recovery</div>
+            </div>
+            <div class="interval-item">
+              <div class="interval-time">10x</div>
+              <div class="interval-label">Rounds</div>
+            </div>
+          </div>
+        </div>
+        <ul class="exercise-list">
+          <li class="exercise-item"><span class="exercise-name">Plank</span><span class="exercise-sets">3 x 45 sec</span></li>
+          <li class="exercise-item"><span class="exercise-name">Hanging Knee Raises</span><span class="exercise-sets">3 x 15</span></li>
+          <li class="exercise-item"><span class="exercise-name">Cable Crunches</span><span class="exercise-sets">3 x 20</span></li>
+          <li class="exercise-item"><span class="exercise-name">Russian Twists</span><span class="exercise-sets">3 x 20</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- DAY 4 -->
+    <div class="workout-day">
+      <div class="workout-header" onclick="toggle(this)">
+        <div class="workout-day-num">04</div>
+        <div class="workout-info">
+          <div class="workout-day-label">Thursday</div>
+          <div class="workout-name">Full Body Circuit</div>
+        </div>
+        <div class="workout-toggle">+</div>
+      </div>
+      <div class="workout-body">
+        <div class="exercise-rest" style="margin-bottom: 16px;">4 Rounds Total — 90 seconds rest between rounds — minimal rest between exercises</div>
+        <ul class="exercise-list">
+          <li class="exercise-item"><span class="exercise-name">Goblet Squat</span><span class="exercise-sets">15 reps</span></li>
+          <li class="exercise-item"><span class="exercise-name">Dumbbell Press</span><span class="exercise-sets">12 reps</span></li>
+          <li class="exercise-item"><span class="exercise-name">Dumbbell Row</span><span class="exercise-sets">12 reps each side</span></li>
+          <li class="exercise-item"><span class="exercise-name">Kettlebell Swing</span><span class="exercise-sets">20 reps</span></li>
+          <li class="exercise-item"><span class="exercise-name">Box Step Ups</span><span class="exercise-sets">12 reps each leg</span></li>
+          <li class="exercise-item"><span class="exercise-name">Battle Ropes</span><span class="exercise-sets">30 seconds</span></li>
+          <li class="exercise-item"><span class="exercise-name">Mountain Climbers</span><span class="exercise-sets">30 seconds</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- DAY 5 -->
+    <div class="workout-day">
+      <div class="workout-header" onclick="toggle(this)">
+        <div class="workout-day-num">05</div>
+        <div class="workout-info">
+          <div class="workout-day-label">Friday</div>
+          <div class="workout-name">Steady State Cardio</div>
+        </div>
+        <div class="workout-toggle">+</div>
+      </div>
+      <div class="workout-body">
+        <ul class="exercise-list">
+          <li class="exercise-item"><span class="exercise-name">Stairmaster or Incline Treadmill</span><span class="exercise-sets">40 min</span></li>
+          <li class="exercise-item"><span class="exercise-name">Weak Point Training</span><span class="exercise-sets">Your choice</span></li>
+        </ul>
+        <div class="exercise-rest">Pace where you can hold a conversation but still feel challenged</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const icon = header.querySelector('.workout-toggle');
+    const isOpen = body.classList.contains('open');
+    document.querySelectorAll('.workout-body').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.workout-toggle').forEach(i => i.classList.remove('open'));
+    if (!isOpen) {
+      body.classList.add('open');
+      icon.classList.add('open');
+    }
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
